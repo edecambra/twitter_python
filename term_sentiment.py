@@ -34,7 +34,6 @@ def sentiScore(fp):
                     if (scores.get(word) == None):
                             totals[word] = totals.get(word, 0) + sum(tweetScore)
                             counts[word] = counts.get(word, 0) + 1    
-    #print len(totals), len(counts)
 
 def termScore():
     for key in totals:
@@ -59,8 +58,6 @@ scores = {}
 tweets = {}
 totals = {}
 counts = {}
-neg = {}
-pos = {}
 newTerms = {}
 
 #Calculation execution   
