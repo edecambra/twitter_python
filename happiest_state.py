@@ -5,6 +5,7 @@
 
 
 import sys, json, re
+from operator import itemgetter
 
 states = {
         'AK': 'Alaska',
@@ -66,6 +67,7 @@ states = {
         'WY': 'Wyoming'
 }
 
+
 # Puts the existing sentiment scores into a dictionary, with scores   
 def sentiDict(fp):
 	for line in fp:
@@ -76,16 +78,11 @@ def sentiDict(fp):
 #matches to the score dictionary and appends this score to an array
 #and prints the sum of the score for each tweet
 def sentiScore(fp):
-    for line in fp: 
-        tweet = json.loads(line)
-        #print tweet
-        text = tweet.get("text") 
-        print tweet[u'user']
-        #print state
-        #if user is not None:
-        #    state = user.get(u'location')
-        #    print state
+    for line in fp:        
         if((json.loads(line)).get("lang") == "en"): #only uses English coded tweets, to use all tweets comment this and unindent
+            #this portion calculates the sentiment of a tweet
+            text = json.loads(line).get("text")
+            score = 0
             if(text != None): #only uses tweets, not deletes
                 text = text.encode("utf-8")
                 text = text.lower()
@@ -96,17 +93,46 @@ def sentiScore(fp):
                     word = re.sub("[_]", "", word) #regex to scrub all underscore
                     if (scores.get(word) != None):
                         tweetScore.append(scores.get(word))
-                #print sum(tweetScore)
-
+                score = sum(tweetScore)        
+            #this portion determines what state the tweet is in
+            user = json.loads(line).get("place")
+            if user is not None:
+                local = user.get("full_name")
+                local = local.encode("utf-8")
+                items = local.split(",")
+                for item in items:
+                    item = item.lstrip(" ")
+                    if item in states.keys() or item in states.values():                        
+                        stateScores[item] = stateScores.get(item, 0) + score
+                        
+def scoreCompress():
+    for key in stateScores:
+        if key in states.keys():
+            finalList[key] = stateScores[key]
+        if key in states.values():
+            for k, v in states.items():
+                if key == v:
+                    finalList[k] = stateScores[key]
+#This is used to take the final, compressed list and sort it to find the
+#happiest state and print to the stdout
+def sortList():
+    for k, v in finalList.items():
+        list.append( (k,v) )
+    list.sort(key=itemgetter(1), reverse = True)
+    print list[0][0]
+  
 def main():
     sent_file = open(sys.argv[1])
     tweet_file = open(sys.argv[2])
     sentiDict(sent_file)
     sentiScore(tweet_file)
+    scoreCompress()
+    sortList()
 
 #global values initilization 
 scores = {}
-tweets = {}
-
+stateScores = {}
+finalList = {}
+list = []
 #Calculation execution   
 main()
