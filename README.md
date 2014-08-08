@@ -1,6 +1,6 @@
 Data Science Assignment 1: Python and Twitter API Data
 ===================================================
-This repository contains all the python scripts, and harvested twitter API data for the first assignment in the coursera data science program.  The tweets can be harvested by any user with the script twitterstream.py, however you must set up a twitter API developers account, and produce access keys and tokens.  Open the sctipt and use the following code to generate your dataset:  python twitterstream.py > output.txt 
+This repository contains all the python scripts, and harvested twitter API data for the first assignment in the coursera data science program.  The tweets can be harvested by any user with the script twitterstream.py, however you must set up a twitter API developers account, and produce access keys and tokens.  Open the sctipt and use the following command line excution to generate your dataset:  python twitterstream.py > output.txt 
 
 These scripts that use this output.txt code are as follows:
 
